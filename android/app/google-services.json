@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "894773852742",
+    "project_id": "news-app-4ab92",
+    "storage_bucket": "news-app-4ab92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894773852742:android:1911cba2fbfb36bd5ae847",
+        "android_client_info": {
+          "package_name": "com.nexus.news"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLwNflvpzLAe3BPpQGhzgpy2NPuXD5m9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

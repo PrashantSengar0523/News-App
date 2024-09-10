@@ -1,24 +1,45 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:nexus_news/Onboarding.dart';
+import 'package:nexus_news/firebase_options.dart';
+import 'package:nexus_news/screens/edit_profile.dart';
+import 'package:provider/provider.dart'; 
+import 'package:get/get.dart';
+import 'package:nexus_news/controllers/drawer_controller.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'repos/authentication_repo.dart'; 
+
+Future<void> main()async {
+  final WidgetsBinding widgetsBinding=WidgetsFlutterBinding.ensureInitialized();
+
+  
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((FirebaseApp value)=>Get.put(AuthenticationRepo()));
+
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => TDrawerController()),
+        // Add other providers here if needed
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
+      title: 'Nexus News',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Onboarding(),
+      home: const EditProfile(),
     );
   }
 }
-
