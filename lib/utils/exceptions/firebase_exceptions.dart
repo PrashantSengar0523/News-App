@@ -94,7 +94,7 @@ class TFirebaseException implements Exception {
       case 'credential-already-in-use':
         return 'This credential is already associated with a different user account.';
       default:
-        return 'An unexpected Firebase error occurred. Please try again.';
+        return 'An unexpected error occurred. Please try again.';
     }
   }
 }

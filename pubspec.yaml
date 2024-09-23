@@ -23,7 +23,18 @@ dependencies:
   provider: ^6.1.2
   readmore: ^3.0.0
   intl: ^0.19.0
-  firebase_core: ^2.24.2
+  firebase_core: ^3.4.1
+  flutter_native_splash: ^2.4.1
+  get_storage: ^2.1.1
+  js: ^0.6.4
+  firebase_auth: ^5.2.1
+  firebase_auth_web: ^5.8.13
+  lottie: ^3.1.2
+  cloud_firestore: ^5.4.1
+  shimmer: ^3.0.0
+  http: ^1.2.2
+  webview_flutter: ^4.9.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +50,11 @@ flutter:
     - assets/images/nexus-logo.png
     - assets/images/avatar.jpg
     - assets/images/Authentication.png
+    - assets/images/loading.json
+    - assets/images/loader.json
+    - assets/images/verifyEmial.gif
+    - assets/images/bubble-gum-message-sent.png
+    - assets/images/error.jpeg
 
   fonts:
     - family: Bold

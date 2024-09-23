@@ -1,47 +1,40 @@
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-// class THttpHelper {
-//   static const String _baseUrl = 'https://your-api-base-url.com'; // Replace with your API base URL
+class THttpHelper {
+  static const String _baseUrl = 'https://newsapi.org/v2'; 
+  static const String apiKey = 'your_api_key';  // Add your API key here
 
-//   // Helper method to make a GET request
-//   static Future<Map<String, dynamic>> get(String endpoint) async {
-//     final response = await http.get(Uri.parse('$_baseUrl/$endpoint'));
-//     return _handleResponse(response);
-//   }
+  // Helper method to make a GET request
+  static Future<Map<String, dynamic>> get(String endpoint) async {
+    try {
+      // Constructing the full URL with API key (if required by the API)
+      final response = await http.get(
+        Uri.parse('$_baseUrl/$endpoint'),
+        headers: {
+          'Authorization': 'Bearer $apiKey',  // Example if API key is needed
+          'Upgrade': 'h2c',  // Optional, to request HTTP/2 Cleartext if required by server
+        },
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
+    }
+  }
 
-//   // Helper method to make a POST request
-//   static Future<Map<String, dynamic>> post(String endpoint, dynamic data) async {
-//     final response = await http.post(
-//       Uri.parse('$_baseUrl/$endpoint'),
-//       headers: {'Content-Type': 'application/json'},
-//       body: json.encode(data),
-//     );
-//     return _handleResponse(response);
-//   }
-
-//   // Helper method to make a PUT request
-//   static Future<Map<String, dynamic>> put(String endpoint, dynamic data) async {
-//     final response = await http.put(
-//       Uri.parse('$_baseUrl/$endpoint'),
-//       headers: {'Content-Type': 'application/json'},
-//       body: json.encode(data),
-//     );
-//     return _handleResponse(response);
-//   }
-
-//   // Helper method to make a DELETE request
-//   static Future<Map<String, dynamic>> delete(String endpoint) async {
-//     final response = await http.delete(Uri.parse('$_baseUrl/$endpoint'));
-//     return _handleResponse(response);
-//   }
-
-//   // Handle the HTTP response
-//   static Map<String, dynamic> _handleResponse(http.Response response) {
-//     if (response.statusCode == 200) {
-//       return json.decode(response.body);
-//     } else {
-//       throw Exception('Failed to load data: ${response.statusCode}');
-//     }
-//   }
-// }
+  // Handle the HTTP response
+  static Map<String, dynamic> _handleResponse(http.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        return json.decode(response.body);
+      case 426:
+        throw Exception('Failed to load data: Upgrade Required (426). The server requires an upgrade to a new protocol.');
+      case 401:
+        throw Exception('Unauthorized access - check your API key (401).');
+      case 500:
+        throw Exception('Internal Server Error (500). Please try again later.');
+      default:
+        throw Exception('Failed to load data: ${response.statusCode}.');
+    }
+  }
+}

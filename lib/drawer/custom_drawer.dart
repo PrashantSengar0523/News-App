@@ -94,7 +94,7 @@ class CustomDrawer extends StatelessWidget {
               const SizedBox(height: 16),
 // Education
               const CustomDrawerCategory(
-                category: 'Education',
+                category: 'Health',
                 icon: Icons.school,
               ),
               const SizedBox(height: 16),

@@ -1,16 +1,32 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nexus_news/utils/constants/colors.dart';
 import 'package:nexus_news/utils/constants/responsive.dart';
-import 'package:readmore/readmore.dart';
-
+import 'package:nexus_news/utils/custom_widgets.dart/open_url_widget.dart';
+import 'package:nexus_news/utils/popups/loaders.dart';
 import '../utils/constants/sizes.dart';
 
 class NewsDetail extends StatelessWidget {
-  const NewsDetail({super.key});
+  const NewsDetail({
+    super.key,
+    required this.imageUrl,
+    required this.headlines,
+    required this.description,
+    required this.author,
+    required this.content,
+    required this.articleUrl, // Add articleUrl parameter
+  });
+
+  final String imageUrl;
+  final String headlines;
+  final String description;
+  final String author;
+  final String content;
+  final String articleUrl; // Add URL to the full article
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +40,20 @@ class NewsDetail extends StatelessWidget {
                 // Background image container
                 Container(
                   width: double.infinity,
-                  height: Responsive.getHeight(context)/1.8,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                        'https://th.bing.com/th/id/OIP.CM8fKB8-P_CyPZcerM0c7QHaEK?w=290&h=180&c=7&r=0&o=5&dpr=1.4&pid=1.7', // Replace with your image URL
-                      ),
-                      fit: BoxFit.cover,
-                    ),
+                  height: Responsive.getHeight(context) / 1.8,
+                  color: TColors.darkGrey,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    errorWidget: (context, url, error) => CachedNetworkImage(
+                        imageUrl:
+                            'https://th.bing.com/th/id/OIP.NwiZS9yjjNjb6lCfIz889AHaGo?w=209&h=187&c=7&r=0&o=5&dpr=1.4&pid=1.7',
+                        width: double.infinity,
+                        height: Responsive.getHeight(context) *
+                            0.20, // Adjust height as needed
+                        fit: BoxFit.cover),
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
                   ),
                 ),
                 // Blurred effect at the bottom using BackdropFilter
@@ -67,7 +89,7 @@ class NewsDetail extends StatelessWidget {
                     width: Responsive.getWidth(context) * 0.085,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: Colors.white.withOpacity(0.6),
+                      color: TColors.primary.withOpacity(0.5),
                     ),
                     child: Center(
                       child: IconButton(
@@ -94,7 +116,7 @@ class NewsDetail extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'The Centre cleared the last roadblock to national carrier Air India Ltd.’s merger with smaller rival Vistara.',
+                          headlines,
                           style: TextStyle(
                             color: TColors.white,
                             fontFamily: 'Bold',
@@ -110,7 +132,7 @@ class NewsDetail extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                "By Jane Smith",
+                                author,
                                 style: TextStyle(
                                   color: TColors.textWhite,
                                   fontFamily: 'Medium',
@@ -143,32 +165,66 @@ class NewsDetail extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.all(12),
-              child: ReadMoreText(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. The Prime Minister Narendra Modi-led Union government has granted absolute powers to the Delhi Lieutenant Governor (L-G) to constitute any authority, board and commission such as the Delhi Commission for Women and the Delhi Electricity Regulatory Commission',
-                trimLines: (Responsive.getHeight(context) * 0.02)
-                    .round(), // Set the dynamic trim lines
-                trimMode: TrimMode.Line, // Trim based on line count
-                trimCollapsedText: 'Read more',
-                trimExpandedText: ' Read less',
-                moreStyle: TextStyle(
-                  fontSize: Responsive.getWidth(context) * 0.038,
-                  fontWeight: FontWeight.bold,
-                  color: TColors.primary, // Color for the "Read more" text
-                ),
-                lessStyle: TextStyle(
-                  fontSize: Responsive.getWidth(context) * 0.038,
-                  fontWeight: FontWeight.bold,
-                  color: TColors.primary, // Color for the "Read less" text
-                ),
-                style: TextStyle(
-                  fontFamily: 'Semibold',
-                  fontSize: Responsive.getWidth(context) * 0.038,
-                  color: TColors.darkerGrey,
-                ),
-                textAlign: TextAlign.start,
-              ),
-            ),
+                padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
+                child: Column(
+                  children: [
+                    Text(
+                      '$description\n',
+                      style: TextStyle(
+                        fontFamily: 'Semibold',
+                        fontSize: Responsive.getWidth(context) * 0.038,
+                        color: TColors.darkerGrey,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                    Text(
+                      '$content ...\n',
+                      style: TextStyle(
+                        fontFamily: 'Semibold',
+                        fontSize: Responsive.getWidth(context) * 0.038,
+                        color: TColors.darkerGrey,
+                      ),
+                      textAlign: TextAlign.start,
+                      maxLines: 4,
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        if (kIsWeb) {
+                          OpenUrlWidget.openUrlWeb(articleUrl);
+                        } else {
+                          TLoaders.customToast(message: "Unable to open it.");
+                          debugPrint(
+                              'Unable to implement webview_flutter package');
+                        }
+                      },
+                      child: Align(
+                          alignment: AlignmentDirectional.topStart,
+                          child: Row(
+                            children: [
+                              Text(
+                                'Read Full Article ',
+                                style: TextStyle(
+                                    color: TColors.primary,
+                                    fontSize:
+                                        Responsive.getWidth(context) * 0.035,
+                                    fontFamily: 'Semibold'),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Icon(
+                                Icons.arrow_forward_rounded,
+                                color: TColors.primary,
+                                size: Responsive.getWidth(context) * 0.035,
+                              )
+                            ],
+                          )),
+                    ),
+                  ],
+                )),
           ],
         ),
       ),

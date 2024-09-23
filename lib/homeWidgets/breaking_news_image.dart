@@ -8,15 +8,19 @@ import '../utils/constants/responsive.dart';
 
 class BreakingNews extends StatelessWidget {
   const BreakingNews({
-    super.key, required this.imageUrl, required this.headlines,
+    super.key, this.imageUrl='https://th.bing.com/th/id/OIP.kgfkdioyvqIrLPdA5bXckAHaE8?w=255&h=180&c=7&r=0&o=5&dpr=1.4&pid=1.7', required this.headlines, required this.description, required this.author, required this.content, required this.articleUrl,
   });
   final String imageUrl;
   final String headlines;
+  final String description;
+  final String author;
+  final String content;
+  final String articleUrl;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(()=>const NewsDetail());
+        Get.to(()=>NewsDetail(imageUrl: imageUrl,headlines: headlines,description: description,author: author,content: content,articleUrl: articleUrl,));
       },
       child: Container(
         height: Responsive.getHeight(context) * 0.30,
@@ -29,11 +33,14 @@ class BreakingNews extends StatelessWidget {
           borderRadius: BorderRadius.circular(Responsive.getWidth(context)>600?24:12),
           child: Stack(
             children: [
-              CachedNetworkImage(
-                imageUrl:imageUrl,
+              CachedNetworkImage(imageUrl: 
+                imageUrl,
+                errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: 'https://th.bing.com/th/id/OIP.NwiZS9yjjNjb6lCfIz889AHaGo?w=209&h=187&c=7&r=0&o=5&dpr=1.4&pid=1.7',fit: BoxFit.cover,
+                          height: double.infinity,
+                          width: double.infinity),
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: double.infinity,
+                height: double.infinity ,
               ),
               Positioned(
                 bottom: 0,
@@ -67,7 +74,7 @@ class BreakingNews extends StatelessWidget {
                         width: Responsive.getWidth(context)*0.22,
                         decoration: BoxDecoration(
                           color: TColors.primary,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(Responsive.getWidth(context)*0.015),
                         ),
                         child: Center(
                           child: Text(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../utils/constants/responsive.dart';
 
-class SubHeading extends StatelessWidget {
-  const SubHeading({
+class SubTitle extends StatelessWidget {
+  const SubTitle({
     super.key,
   });
 

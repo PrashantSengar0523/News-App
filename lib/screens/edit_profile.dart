@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nexus_news/screens/edit_profile_field.dart';
 import 'package:nexus_news/utils/constants/colors.dart';
 import 'package:nexus_news/utils/constants/responsive.dart';
 
+import '../models/user_model.dart';
+import '../repos/user_repo.dart';
+import '../utils/constants/shimmer.dart';
 import '../utils/custom_widgets.dart/custom_dialog_box.dart';
 
 class EditProfile extends StatelessWidget {
@@ -111,13 +115,37 @@ class EditProfile extends StatelessWidget {
                           fontFamily: 'Medium',
                           fontSize: Responsive.getWidth(context) * 0.035,
                           color: TColors.darkerGrey)),
-                  Text("Aditya Rajput",
-                      style: TextStyle(
+                          FutureBuilder<UserModel>(
+                        future: UserRepo.instance.retrieveUserRecord(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                                child: PShimmer(
+                              height: 10,
+                              width: Responsive.getWidth(context) * 0.085,
+                            ));
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                                child: Text('Something went wrong!'));
+                          } else if (snapshot.hasData) {
+                            final user = snapshot.data!;
+                            return Text(user.name,
+                                style: TextStyle(
                           fontFamily: 'Semibold',
                           fontSize: Responsive.getWidth(context) * 0.035,
-                          color: TColors.black)),
+                          color: TColors.black));
+                          } else {
+                            return const Center(
+                                child: Text(''));
+                          }
+                        },
+                      ),
+                
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(()=>const EditProfilefilds());
+                      },
                       icon: Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: TColors.iconPrimary,
@@ -161,11 +189,33 @@ class EditProfile extends StatelessWidget {
                           fontFamily: 'Medium',
                           fontSize: Responsive.getWidth(context) * 0.035,
                           color: TColors.darkerGrey)),
-                  Text("support12@gmail.com",
+                            FutureBuilder<UserModel>(
+                        future: UserRepo.instance.retrieveUserRecord(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                                child: PShimmer(
+                              height: 10,
+                              width: Responsive.getWidth(context) * 0.085,
+                            ));
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                                child: Text('Something went wrong!'));
+                          } else if (snapshot.hasData) {
+                            final user = snapshot.data!;
+                            return Text(user.email,
                       style: TextStyle(
                           fontFamily: 'Semibold',
                           fontSize: Responsive.getWidth(context) * 0.035,
-                          color: TColors.black)),
+                          color: TColors.black));
+                          } else {
+                            return const Center(
+                                child: Text(''));
+                          }
+                        },
+                      ),
+                  
                   IconButton(
                       onPressed: () {},
                       icon: Icon(
@@ -186,11 +236,32 @@ class EditProfile extends StatelessWidget {
                           fontFamily: 'Medium',
                           fontSize: Responsive.getWidth(context) * 0.035,
                           color: TColors.darkerGrey)),
-                  Text("IQ1N34WN2N2MLCX",
+                  FutureBuilder<UserModel>(
+                        future: UserRepo.instance.retrieveUserRecord(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                                child: PShimmer(
+                              height: 10,
+                              width: Responsive.getWidth(context) * 0.085,
+                            ));
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                                child: Text('Something went wrong!'));
+                          } else if (snapshot.hasData) {
+                            final user = snapshot.data!;
+                            return Text(user.id,
                       style: TextStyle(
                           fontFamily: 'Semibold',
-                          fontSize: Responsive.getWidth(context) * 0.035,
-                          color: TColors.black)),
+                          fontSize: Responsive.getWidth(context) * 0.032,
+                          color: TColors.black));
+                          } else {
+                            return const Center(
+                                child: Text(''));
+                          }
+                        },
+                      ),
                   IconButton(
                       onPressed: () {},
                       icon: Icon(
@@ -239,16 +310,7 @@ class EditProfile extends StatelessWidget {
   }
 }
 
-class ChangeName extends StatelessWidget {
-  const ChangeName({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-
-    );
-  }
-}
 
 
 

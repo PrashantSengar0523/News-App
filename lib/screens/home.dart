@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nexus_news/homeWidgets/body_heading.dart';
 import 'package:nexus_news/homeWidgets/greet_heading.dart';
 import 'package:nexus_news/homeWidgets/sub_heading.dart';
+import 'package:nexus_news/repos/news_repo.dart';
 import 'package:nexus_news/utils/constants/colors.dart';
 import 'package:nexus_news/utils/constants/responsive.dart';
 import 'package:nexus_news/utils/constants/sizes.dart';
-
 import '../drawer/custom_drawer.dart';
 import '../homeWidgets/body_list_news.dart';
 import '../homeWidgets/promo_slider.dart';
@@ -16,6 +16,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(NewsRepo());
     return Scaffold(
       backgroundColor: TColors.white,
       appBar: AppBar(
@@ -33,8 +34,7 @@ class Home extends StatelessWidget {
                 decoration: BoxDecoration(
                     // color: TColors.primary,
                     borderRadius: BorderRadius.circular(8)),
-                child: Image.asset(
-                    'assets/images/nexus-logo.png'),
+                child: Image.asset('assets/images/nexus-logo.png'),
               ),
               Flexible(
                 child: SizedBox(
@@ -108,18 +108,18 @@ class Home extends StatelessWidget {
                 height: 10,
               ),
               GreetHeading(),
-              SubHeading(),
+              SubTitle(),
               SizedBox(
                 height: TSizes.spaceBtwSections,
               ),
+
+              /// Top Headlines----->
               TSliders(),
               SizedBox(
                 height: TSizes.spaceBtwSections,
               ),
-              BodyHeading(),
-              SizedBox(
-                height: TSizes.spaceBtwItems,
-              ),
+
+              /// News---->
               ListOfNews(),
             ],
           ),

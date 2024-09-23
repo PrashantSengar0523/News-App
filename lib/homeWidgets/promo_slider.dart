@@ -1,9 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nexus_news/controllers/headline_controller.dart';
 import 'package:nexus_news/homeWidgets/breaking_news_image.dart';
+import 'package:nexus_news/repos/news_repo.dart';
+import 'package:nexus_news/utils/shimmers/headline_shimmer.dart';
+import 'package:provider/provider.dart'; // Import provider
 
 import '../controllers/home_slider_controller.dart';
+import '../controllers/drawer_controller.dart'; // Import Drawer Controller
 import '../utils/constants/colors.dart';
 import '../utils/constants/responsive.dart';
 
@@ -12,70 +17,88 @@ class TSliders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize the CarouselSliderController
-    final controller = Get.put(HomeSliderController());
+    // Initialize controllers
+    final homeSliderController = Get.put(HomeSliderController());
+    final headlineController = Get.put(HeadlineController());
+    Get.put(NewsRepo());
 
-    return Column(
-      children: [
-        Row(
+    // Fetch headlines when the selected category changes
+    return Consumer<TDrawerController>(
+      builder: (context, drawerController, child) {
+        // Call the API based on the selected category
+        headlineController.getHeadlinesByCategory(drawerController.selectedCategory);
+
+        return Column(
           children: [
-            Expanded(
-              child: Text(
-                '   Breaking news',
-                style: TextStyle(
-                  fontFamily: 'Light',
-                  fontSize: Responsive.getWidth(context) * 0.035,
-                  color: TColors.primary,
-                  fontWeight: FontWeight.w600,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Breaking news - ${drawerController.selectedCategory}', // Display the category
+                    style: TextStyle(
+                      fontFamily: 'Light',
+                      fontSize: Responsive.getWidth(context) * 0.035,
+                      color: TColors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Obx(() => Row(
-                  children: List.generate(3, (index) {
+                Obx(() => Row(
+                  children: List.generate(6, (index) {
                     return Container(
                       margin: const EdgeInsets.only(right: 8),
-                      height: 4,
-                      width: 14,
+                      height: Responsive.getHeight(context) * 0.005,
+                      width: Responsive.getWidth(context) * 0.015,
                       decoration: BoxDecoration(
-                        color: controller.carouselCurrentIndex.value == index
+                        color: homeSliderController.carouselCurrentIndex.value == index
                             ? TColors.primary
-                            : TColors
-                                .grey, // Change color based on active index
+                            : TColors.grey, // Change color based on active index
                         borderRadius: BorderRadius.circular(5),
                       ),
                     );
                   }),
                 )),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        CarouselSlider(
-          items: const [
-            BreakingNews(
-              imageUrl:
-                  'https://img-s-msn-com.akamaized.net/tenant/amp/entityid/BB1pBppR.img?w=768&h=512&m=6',
-              headlines:
-                  "The Centre cleared the last roadblock to national carrier Air India Ltd.’s merger with smaller rival Vistara, approving a S 360 million (276 million) investment by Singapore Airlines Ltd. into the new combined carrier.",
+              ],
             ),
-            BreakingNews(
-              imageUrl: 'https://th.bing.com/th/id/OIP.CM8fKB8-P_CyPZcerM0c7QHaEK?w=290&h=180&c=7&r=0&o=5&dpr=1.4&pid=1.7',
-              headlines: "India's Covid Crises Needs a New Lockdown",
-            ),
-            
+            const SizedBox(height: 10),
+            Obx(() {
+              if (headlineController.isLoading.value) {
+                return const HeadlineShimmer();
+              } 
+              if (headlineController.headlines.isEmpty) {
+            return const Center(
+              child: Text("Looks like we're out of stories for now, check back soon!"),
+            );
+          }
+              else {
+                // Limit the number of headlines to 6
+                final headlinesToShow = headlineController.headlines.sublist(0,6).toList();
+                
+                return CarouselSlider(
+                  items: headlinesToShow.map((headline) {
+                    return BreakingNews(
+                      imageUrl: headline.urlToImage ?? 'https://th.bing.com/th/id/OIP.NwiZS9yjjNjb6lCfIz889AHaGo?w=209&h=187&c=7&r=0&o=5&dpr=1.4&pid=1.7', // Use a default or placeholder image if null
+                      headlines: headline.title ?? 'No Title', // Use a default title if null
+                      description: headline.description ?? 'Description is not available',
+                      author: headline.author ?? 'Unknown',
+                      content: headline.content ?? 'Content not available',
+                      articleUrl: headline.url ?? 'Not available',
+                    );
+                  }).toList(),
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    viewportFraction: 0.95,
+                    enlargeCenterPage: true,
+                    onPageChanged: (index, reason) {
+                      homeSliderController.pageIndicator(index);
+                    },
+                  ),
+                );
+              }
+            }),
           ],
-          options: CarouselOptions(
-            autoPlay: true,
-            viewportFraction: 0.95,
-            enlargeCenterPage: true,
-            onPageChanged: (index, reason) {
-              // Call the method to update the index
-              controller.pageIndicator(index);
-            },
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 }

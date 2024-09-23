@@ -31,7 +31,7 @@ class CustomDialogBox extends StatelessWidget {
   Widget contentBox(context) {
     return Center(
       child: Container(
-        padding: EdgeInsets.only(top: 12,right: 12,left: 12),
+        padding: const EdgeInsets.only(top: 12,right: 12,left: 12),
         height:175,
         width: Responsive.getWidth(context)/1.5,
         decoration: BoxDecoration(

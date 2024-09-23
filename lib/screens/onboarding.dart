@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nexus_news/screens/auth.dart';
+import 'package:nexus_news/controllers/onboarding_controller.dart';
 import 'package:nexus_news/utils/constants/colors.dart';
+import 'package:nexus_news/utils/constants/responsive.dart';
 
 class Onboarding extends StatelessWidget {
   const Onboarding({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen width and height
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+
+    final controller=Get.put(OnboardingController());
 
     return Scaffold(
       backgroundColor: TColors.primary,
@@ -22,15 +22,15 @@ class Onboarding extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/nexus-logo.png',
-                height: screenHeight * 0.20,
-                width: screenWidth * 0.50,
+                height: Responsive.getHeight(context) * 0.20,
+                width: Responsive.getWidth(context) * 0.50,
               ),
               const SizedBox(height: 20,),
               Text(
                 "Welcome to Nexus News",
                 style: TextStyle(
                   fontFamily: 'Bold',
-                  fontSize: screenWidth * 0.065,
+                  fontSize: Responsive.getWidth(context)  * 0.065,
                   color: TColors.white,
                 ),
               ),
@@ -39,7 +39,7 @@ class Onboarding extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Regular',
-                  fontSize: screenWidth * 0.055,
+                  fontSize: Responsive.getWidth(context)  * 0.055,
                   color: TColors.white,
                 ),
               ),
@@ -62,7 +62,7 @@ class Onboarding extends StatelessWidget {
                       'Access news around the world',
                       style: TextStyle(
                         fontFamily: 'Regular',
-                        fontSize: screenWidth * 0.045,
+                        fontSize: Responsive.getWidth(context)  * 0.045,
                         color: TColors.white,
                       ),
                     )
@@ -88,7 +88,7 @@ class Onboarding extends StatelessWidget {
                       'Stay tuned on major events',
                       style: TextStyle(
                         fontFamily: 'Regular',
-                        fontSize: screenWidth * 0.045,
+                        fontSize: Responsive.getWidth(context) * 0.045,
                         color: TColors.white,
                       ),
                     )
@@ -114,7 +114,7 @@ class Onboarding extends StatelessWidget {
                       "Discover what's popular",
                       style: TextStyle(
                         fontFamily: 'Regular',
-                        fontSize: screenWidth * 0.045,
+                        fontSize: Responsive.getWidth(context)  * 0.045,
                         color: TColors.white,
                       ),
                     )
@@ -122,16 +122,16 @@ class Onboarding extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.11,
+                height: Responsive.getHeight(context)  * 0.11,
               ),
               InkWell(
                 onTap: () {
-                  Get.to(()=>Auth());
+                  controller.navigateToAuthenticationScreen();
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 12),
                   height: 50,
-                  width: screenWidth,
+                  width: Responsive.getWidth(context),
                   decoration: BoxDecoration(
                     color: TColors.light,
                     borderRadius: BorderRadius.circular(11),
@@ -145,7 +145,7 @@ class Onboarding extends StatelessWidget {
                           style: TextStyle(
                             color: TColors.primary,
                             fontFamily: 'Bold',
-                            fontSize: screenWidth * 0.045,
+                            fontSize: Responsive.getWidth(context)  * 0.045,
                             shadows: const [
                               Shadow(
                                 blurRadius: 3.0,
